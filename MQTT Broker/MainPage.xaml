@@ -242,10 +242,10 @@ The analog output is directly proportional to the temperature in Celsius: 10 mV 
 This sensor is very similar with the LM335 (calibrated in Kelvin) and with the LM34 (calibrated in Fahrenheit)."
                            TextWrapping="Wrap"/>
             </StackPanel>
-            <!--<Charting:Chart x:Name="TempChart" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+            <Charting:Chart x:Name="TempChart" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
                             Width="650" Height="400" Margin="5">
                 <Charting:LineSeries Title="Direct Sensor" Margin="0" IndependentValuePath="Time" DependentValuePath="Temp" IsSelectionEnabled="True"/>
-            </Charting:Chart>-->
+            </Charting:Chart>
             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right"
                         Margin="5,80,5,5">
                 <TextBox Width="210" Header="MQTT Target" Margin="5" Windows10version1809:CornerRadius="5"/>

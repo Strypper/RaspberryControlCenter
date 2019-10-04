@@ -32,11 +32,35 @@ namespace MQTT_Broker
         private string PayLoad;
         private bool LightDigital;
         private bool RelayDigital;
+        Random rdm = new Random();
 
         public MainPage()
         {
             this.InitializeComponent();
             MQTTBrokerInit();
+            List<TempDemo> demo = new List<TempDemo>()
+            {
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
+                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)}
+            };
+            (TempChart.Series[0] as LineSeries).ItemsSource = demo;
         }
 
 
@@ -99,53 +123,6 @@ namespace MQTT_Broker
                      await Task.Delay(5000); // Every 10 seconds
                  }
              });
-            //if (LightDigital == true)
-
-            //{
-            //    message = new MqttApplicationMessageBuilder()
-            //           .WithTopic("hello/world")
-            //           .WithPayload(PayLoad)
-            //           .WithExactlyOnceQoS()
-            //           .WithRetainFlag(true)
-            //           .Build();
-            //    await mqttServer.PublishAsync(message);
-            //}
-
-            //if (LightDigital == false)
-
-            //{
-            //    message = new MqttApplicationMessageBuilder()
-            //           .WithTopic("hello/world")
-            //           .WithPayload(PayLoad)
-            //           .WithExactlyOnceQoS()
-            //           .WithRetainFlag(true)
-            //           .Build();
-            //    await mqttServer.PublishAsync(message);
-            //}
-
-            //if (RelayDigital == true)
-
-            //{
-            //    message = new MqttApplicationMessageBuilder()
-            //           .WithTopic("hello/world")
-            //           .WithPayload(PayLoad)
-            //           .WithExactlyOnceQoS()
-            //           .WithRetainFlag(true)
-            //           .Build();
-            //    await mqttServer.PublishAsync(message);
-            //}
-
-            //if (RelayDigital == false)
-
-            //{
-            //    message = new MqttApplicationMessageBuilder()
-            //           .WithTopic("hello/world")
-            //           .WithPayload(PayLoad)
-            //           .WithExactlyOnceQoS()
-            //           .WithRetainFlag(true)
-            //           .Build();
-            //    await mqttServer.PublishAsync(message);
-            //}
         }
 
         private void ToggleFirstLightSection1_Toggled(object sender, RoutedEventArgs e)

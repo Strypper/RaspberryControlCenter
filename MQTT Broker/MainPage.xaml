@@ -1,0 +1,289 @@
+﻿<Page
+    x:Class="MQTT_Broker.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MQTT_Broker"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lottieUwp="using:LottieUWP"
+    xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
+    xmlns:converters="using:MQTT_Broker.Converters"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <LinearGradientBrush x:Key="DefaultColor" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#a8ff78" Offset="0.0" />
+            <GradientStop Color="#78ffd6" Offset="0.7" />
+        </LinearGradientBrush>
+    </Page.Resources>
+    <Grid Background="{StaticResource DefaultColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center"
+                        Width="550">
+                <TextBlock Text="DIGITAL I/O"  
+                           HorizontalAlignment="Center"
+                           Margin="5" FontWeight="ExtraBold"/>
+                <TextBlock Margin="5"
+                           HorizontalAlignment="Center"
+                           Text="Unlike analog signals, which may take on any value within a range of values, digital signals have two distinct values: HIGH (1) or LOW (0). You use digital signals in situations
+where the input or output will have one of those two values. For example, one way that you might use a digital signal is to turn an LED on or off."
+                           TextWrapping="Wrap"/>
+                <Button HorizontalAlignment="Center" Margin="5" Height="50"
+                                 Content="LEARN MORE ABOUT DIGITAL"/>
+            </StackPanel>
+            <StackPanel x:Name="OnOffSection" Orientation="Horizontal"
+                        VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                        Margin="5">
+               <Border x:Name="LightOne" Width="230" Height="290"
+                                    Margin="15" CornerRadius="15">
+                  <StackPanel x:Name="Test" Background="#fafafa">
+                                    <Windows10version1809:StackPanel.BackgroundTransition>
+                                        <Windows10version1809:BrushTransition/>
+                                    </Windows10version1809:StackPanel.BackgroundTransition>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE781;" 
+                                              x:Name="FirstLightBubSec1"
+                                              Width="150" Height="150"
+                                              FontSize="100">
+                                    </FontIcon>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="FirstLightInstruc" Margin="5"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Width="100" Height="50"
+                                            Windows10version1809:CornerRadius="5"
+                                            Content="Instruction"
+                                            FontWeight="ExtraBold"/>
+                            <Button x:Name="FirstLightTest" Margin="5"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Width="100" Height="50"
+                                            Windows10version1809:CornerRadius="5"
+                                            Content="Test" Click="FirstLightTest_Click"
+                                            FontWeight="ExtraBold"/>
+                        </StackPanel>
+                        <TextBlock x:Name="StatusDigitalLed" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" Margin="5"/>
+                        <ToggleSwitch 
+                                            x:Name="ToggleFirstLightSection1"
+                                            HorizontalAlignment="Center"
+                                            Width="75" Margin="5,15,5,5"
+                                            Toggled="ToggleFirstLightSection1_Toggled"/>
+                  </StackPanel>
+               </Border>
+               <Border x:Name="Relay" Width="230" Height="290"
+                                    Margin="15" CornerRadius="15" Background="#fafafa">
+                  <StackPanel>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE964;"
+                                              x:Name="RelayIcon"
+                                              Width="150" Height="150"
+                                              FontSize="100">
+                                    </FontIcon>
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+                            <Button x:Name="RelayInstruc" Margin="5"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Width="100" Height="50"
+                                            Windows10version1809:CornerRadius="5"
+                                            Content="Instruction"
+                                            FontWeight="ExtraBold"/>
+                            <Button x:Name="RelayTest" Margin="5"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Width="100" Height="50"
+                                            Windows10version1809:CornerRadius="5"
+                                            Content="Test"
+                                            FontWeight="ExtraBold"/>
+                        </StackPanel>
+                        <TextBlock x:Name="StatusDigitalRelay" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" Margin="5"/>
+                        <ToggleSwitch 
+                                            x:Name="ToggleRelaySec1"
+                                            HorizontalAlignment="Center"
+                                            Width="75" Margin="5,15,5,5"
+                                            Toggled="ToggleRelaySec1_Toggled"/>
+                  </StackPanel>
+               </Border>
+               <Border x:Name="Fan" Width="230" Height="290"
+                                    Margin="15" CornerRadius="15" Background="#fafafa">
+                  <StackPanel>
+                                    <FontIcon FontFamily="Segoe UI Symbol" Glyph="&#x2707;"
+                                              x:Name="FanIcon"
+                                              Width="150" Height="150"
+                                              FontSize="100">
+                                    </FontIcon>
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center">
+
+                            <Button x:Name="FanInstruct" Margin="5"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Width="100" Height="50"
+                                            Windows10version1809:CornerRadius="5"
+                                            Content="Instruction"
+                                            FontWeight="ExtraBold"/>
+
+                            <Button x:Name="FanTest" Margin="5"
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Width="100" Height="50"
+                                            Windows10version1809:CornerRadius="5"
+                                            Content="Test"
+                                            FontWeight="ExtraBold"/>
+                        </StackPanel>
+                        <TextBlock x:Name="StatusDigitalFan" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" Margin="5"/>
+                        <ToggleSwitch 
+                                            x:Name="ToggleFanSec1"
+                                            HorizontalAlignment="Center"
+                                            Width="75" Margin="5,15,5,5"/>
+                  </StackPanel>
+               </Border>
+                        </StackPanel>
+            
+            </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center"
+                        Width="500">
+                <TextBlock Text="ANALOG I/O"
+                           Margin="5" FontWeight="ExtraBold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock
+                           HorizontalAlignment="Center"
+                           Text="In this section you'll learn about PPM (Pulse Position Modulation) to control 
+                                 Analog Devices such as Servo angle or Fan speed, even the Light's brightness."
+                           TextWrapping="Wrap"/>
+                <Button Content="LEARN MORE ABOUT ANALOG AND PPM" HorizontalAlignment="Center" Margin="5"
+                        Height="50"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,15">
+                <Slider x:Name="ServoSlider" Value="{Binding DesiredAngle, Mode=TwoWay}"
+                        TickFrequency="10" TickPlacement="Outside"
+                        Width="670" Margin="5" Header="Servo" Minimum="0" Maximum="100"/>
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                    <Button x:Name="ServorInstruction" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Instruction" FontWeight="ExtraBold"/>
+                    <Button x:Name="ServorConnection" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Connect" FontWeight="ExtraBold"/>
+                    <Button x:Name="ServorStart" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Start" FontWeight="ExtraBold"/>
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Margin="5" FontWeight="ExtraBold">
+                                <Run Text="ANGLE:"/>
+                                <Run Text="{x:Bind ServoSlider.Value, Mode=OneWay}"/>
+                                <Run Text="DEGREE"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <Slider x:Name="FanSlider" Width="670" Margin="5" Header="Fan"/>
+                <StackPanel Orientation="Horizontal" Width="400"
+                        HorizontalAlignment="Center">
+                    <Button x:Name="FanInstruction" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Instruction" FontWeight="ExtraBold"/>
+                    <Button x:Name="FanConnection" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Connect" FontWeight="ExtraBold"/>
+
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Margin="5" FontWeight="ExtraBold">
+                                <Run Text="RPM:"/>
+                                <Run Text="{x:Bind FanSlider.Value, Mode=OneWay}"/>
+                    </TextBlock>
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Margin="5" FontWeight="ExtraBold">
+                                <Run Text="SPEED:"/>
+                                <Run Text="{x:Bind FanSlider.Value, Mode=OneWay}"/>
+                    </TextBlock>
+                </StackPanel>
+
+
+                <Slider x:Name="LightSlider" 
+                    Width="670" Margin="5" Header="Light"/>
+                <StackPanel Orientation="Horizontal" Width="400"
+                        HorizontalAlignment="Center">
+                    <Button x:Name="LightInstruction" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Instruction" FontWeight="ExtraBold"/>
+                    <Button x:Name="LightConnection" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50" Margin="5"
+                        Content="Connect" FontWeight="ExtraBold"/>
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Margin="5" FontWeight="ExtraBold">
+                                <Run Text="BRIGHTNESS:"/>
+                                <Run Text="{x:Bind LightSlider.Value, Mode=OneWay}"/>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Width="730">
+                <TextBlock Text="TEMPERATURE SENSOR: LM35DZ, LM335, LM34"
+                           Margin="5" FontWeight="ExtraBold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock
+                           HorizontalAlignment="Center"
+                           Text="The LM35DZ is a linear temperature sensor that comes directly calibrated in Celsius. 
+The analog output is directly proportional to the temperature in Celsius: 10 mV per degrees Celsius rise in temperature. 
+This sensor is very similar with the LM335 (calibrated in Kelvin) and with the LM34 (calibrated in Fahrenheit)."
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+            <!--<Charting:Chart x:Name="TempChart" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                            Width="650" Height="400" Margin="5">
+                <Charting:LineSeries Title="Direct Sensor" Margin="0" IndependentValuePath="Time" DependentValuePath="Temp" IsSelectionEnabled="True"/>
+            </Charting:Chart>-->
+            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right"
+                        Margin="5,80,5,5">
+                <TextBox Width="210" Header="MQTT Target" Margin="5" Windows10version1809:CornerRadius="5"/>
+                <Button Content="Subcribe" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        FontWeight="ExtraBold" Windows10version1809:CornerRadius="5"
+                        Width="200" Height="50" Margin="5"/>
+                <Button Content="Publish" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        FontWeight="ExtraBold" Windows10version1809:CornerRadius="5"
+                        Width="200" Height="50" Margin="5"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <TextBlock Text="Direct Connection" HorizontalAlignment="Center"
+                           FontWeight="ExtraBold" Margin="5"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Connect" Margin="5" 
+                        FontWeight="ExtraBold" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50"/>
+                    <Button Content="Reset" Margin="5" 
+                        FontWeight="ExtraBold" Windows10version1809:CornerRadius="5"
+                        Width="100" Height="50"/>
+                </StackPanel>
+                <Button x:Name="SensorInstruction" Content="Instruction" Margin="5" 
+                        FontWeight="ExtraBold" Windows10version1809:CornerRadius="5"
+                        Width="210" Height="50" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <StackPanel>
+                <TextBlock Text="CUSTOM CONTROLS"
+                           Margin="5" FontWeight="ExtraBold"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock
+                           HorizontalAlignment="Center"
+                           Text="Since you are used to all the functionalities on the Raspberry board, it's time to move on and
+create your own controls base on your assemble skills. This software will make your works more efficiency because your main forcus
+is hook all the controls to the board and register it to this sofware."
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

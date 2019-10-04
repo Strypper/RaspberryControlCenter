@@ -1,0 +1,8 @@
+﻿<Application
+    x:Class="MQTT_Broker.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MQTT_Broker"
+    RequestedTheme="Light">
+
+</Application>

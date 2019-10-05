@@ -2,12 +2,14 @@
 using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -30,8 +32,9 @@ namespace MQTT_Broker
         private GpioPin LEDpin, RELAYpin;
         private GpioPinValue LEDpinValue, RELAYpinValue;
         private string PayLoad;
-        private bool LightDigital;
-        private bool RelayDigital;
+        private bool LightDigital, RelayDigital;
+        BitmapImage LED = new BitmapImage(new Uri("ms-appx:///Assets/Diagrams/LEDDigital.png"));
+        BitmapImage RELAY = new BitmapImage(new Uri("ms-appx:///Assets/Diagrams/RelayDigital.png"));
         Random rdm = new Random();
 
         public MainPage()
@@ -50,14 +53,6 @@ namespace MQTT_Broker
                 new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
                 new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
                 new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
                 new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)}
             };
             (TempChart.Series[0] as LineSeries).ItemsSource = demo;
@@ -66,7 +61,7 @@ namespace MQTT_Broker
 
 
 
-        private void InitGPIO()
+        private bool InitGPIO(TextBlock txt)
         {
             var gpio = GpioController.GetDefault();
 
@@ -74,9 +69,13 @@ namespace MQTT_Broker
             if (gpio == null)
             {
                 LEDpin = null;
-                //StatusDigitalLed.Text = "There is no GPIO controller on this device.";
-                return;
+                txt.Text = "There is no GPIO controller on this device.";
+                txt.Foreground = new SolidColorBrush(Colors.Red);
+                return false;
             }
+
+            StatusDigitalLed.Text = "GPIO controller initialized correctly.";
+            StatusDigitalLed.Foreground = new SolidColorBrush(Colors.Green);
 
             LEDpin = gpio.OpenPin(LED_PIN);
             RELAYpin = gpio.OpenPin(RELAY_PIN);
@@ -86,9 +85,7 @@ namespace MQTT_Broker
             RELAYpin.Write(RELAYpinValue);
             LEDpin.SetDriveMode(GpioPinDriveMode.Output);
             RELAYpin.SetDriveMode(GpioPinDriveMode.Output);
-
-            //StatusDigitalLed.Text = "GPIO pin initialized correctly.";
-
+            return true;
         }
 
         public async Task MQTTBrokerInit()
@@ -169,7 +166,34 @@ namespace MQTT_Broker
 
         private void FirstLightTest_Click(object sender, RoutedEventArgs e)
         {
-            InitGPIO();
+            if (InitGPIO(StatusDigitalLed) == true) ToggleFirstLightSection1.IsEnabled = true;
+            else
+            {
+                ToggleFirstLightSection1.IsEnabled = false;
+            }
+
+        }
+
+
+
+        private async void InstructionClick(object sender, RoutedEventArgs e)
+        {
+            if(sender == FirstLightInstruc) 
+            {
+                InstructionDiaglog diaglog = new InstructionDiaglog("27", "1 LED, 1 Capacitor", LED)
+                {
+                    Title = "Light Digital Example"
+                };
+                diaglog.ShowAsync();
+            }
+            else if(sender == RelayInstruc) 
+            {
+                InstructionDiaglog diaglog = new InstructionDiaglog("17", "1 Relay with 1 Capacitor", RELAY)
+                {
+                    Title = "Relay Digital Example"
+                };
+                diaglog.ShowAsync();
+            }
         }
     }
 }

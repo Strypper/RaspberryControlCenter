@@ -1,0 +1,29 @@
+﻿<ContentDialog
+    x:Class="MQTT_Broker.InstructionDiaglog"
+    x:Name="dialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MQTT_Broker"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="TITLE"
+    PrimaryButtonText="Got It"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+
+    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Image x:Name="ArduinoSketch" Width="400" Height="300" Stretch="UniformToFill"
+                VerticalAlignment="Top" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="Instruction" Margin="5" Height="100" TextWrapping="WrapWholeWords"
+                   Text="leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+Why do we use it?Lorem Ipsum as their eir infancy. Various versions have evolved over the years"/>
+        <TextBlock Margin="5" Foreground="Orange">
+                <Run Text="Components: "/>
+                <Run x:Name="ComponentsUI" Text=""/>
+        </TextBlock>
+        <TextBlock Foreground="Green" Margin="5">
+                <Run Text="Pin: "/>
+                <Run x:Name="PinUI" Text=""/>
+        </TextBlock>
+    </StackPanel>
+</ContentDialog>

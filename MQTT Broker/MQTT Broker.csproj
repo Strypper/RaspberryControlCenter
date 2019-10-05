@@ -119,10 +119,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ContentDialogs\Instruction.xaml.cs">
-      <DependentUpon>Instruction.xaml</DependentUpon>
+    <Compile Include="InstructionDiaglog.xaml.cs">
+      <DependentUpon>InstructionDiaglog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -134,6 +133,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Diagrams\LEDDigital.png" />
+    <Content Include="Assets\Diagrams\RelayDigital.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -148,7 +149,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="ContentDialogs\Instruction.xaml">
+    <Page Include="InstructionDiaglog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -171,9 +172,7 @@
       <Version>2.3.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Devices\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

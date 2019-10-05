@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:lottieUwp="using:LottieUWP"
     xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
-    xmlns:converters="using:MQTT_Broker.Converters"
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d">
     <Page.Resources>
@@ -42,9 +41,9 @@ where the input or output will have one of those two values. For example, one wa
             <StackPanel x:Name="OnOffSection" Orientation="Horizontal"
                         VerticalAlignment="Bottom" HorizontalAlignment="Center"
                         Margin="5">
-               <Border x:Name="LightOne" Width="230" Height="290"
-                                    Margin="15" CornerRadius="15">
-                  <StackPanel x:Name="Test" Background="#fafafa">
+                <Border x:Name="LightOne" Width="230" Height="290"
+                        Margin="15" CornerRadius="15">
+                    <StackPanel x:Name="Test" Background="#fafafa">
                                     <Windows10version1809:StackPanel.BackgroundTransition>
                                         <Windows10version1809:BrushTransition/>
                                     </Windows10version1809:StackPanel.BackgroundTransition>
@@ -60,7 +59,8 @@ where the input or output will have one of those two values. For example, one wa
                                             Width="100" Height="50"
                                             Windows10version1809:CornerRadius="5"
                                             Content="Instruction"
-                                            FontWeight="ExtraBold"/>
+                                            FontWeight="ExtraBold"
+                                            Click="InstructionClick"/>
                             <Button x:Name="FirstLightTest" Margin="5"
                                             VerticalAlignment="Center" 
                                             HorizontalAlignment="Center"
@@ -70,9 +70,11 @@ where the input or output will have one of those two values. For example, one wa
                                             FontWeight="ExtraBold"/>
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalLed" VerticalAlignment="Center"
-                                   HorizontalAlignment="Center" Margin="5"/>
+                                   HorizontalAlignment="Center" Margin="2" FontSize="11"
+                                   FontWeight="Bold" Width="220" TextWrapping="Wrap"/>
                         <ToggleSwitch 
                                             x:Name="ToggleFirstLightSection1"
+                                            IsEnabled="False"
                                             HorizontalAlignment="Center"
                                             Width="75" Margin="5,15,5,5"
                                             Toggled="ToggleFirstLightSection1_Toggled"/>
@@ -95,6 +97,7 @@ where the input or output will have one of those two values. For example, one wa
                                             Width="100" Height="50"
                                             Windows10version1809:CornerRadius="5"
                                             Content="Instruction"
+                                            Click="InstructionClick"
                                             FontWeight="ExtraBold"/>
                             <Button x:Name="RelayTest" Margin="5"
                                             VerticalAlignment="Center" 
@@ -105,9 +108,11 @@ where the input or output will have one of those two values. For example, one wa
                                             FontWeight="ExtraBold"/>
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalRelay" VerticalAlignment="Center"
-                                   HorizontalAlignment="Center" Margin="5"/>
+                                   HorizontalAlignment="Center" Margin="2" FontSize="11"
+                                   FontWeight="Bold" Width="220" TextWrapping="Wrap"/>
                         <ToggleSwitch 
                                             x:Name="ToggleRelaySec1"
+                                            IsEnabled="False"
                                             HorizontalAlignment="Center"
                                             Width="75" Margin="5,15,5,5"
                                             Toggled="ToggleRelaySec1_Toggled"/>
@@ -142,9 +147,10 @@ where the input or output will have one of those two values. For example, one wa
                                             FontWeight="ExtraBold"/>
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalFan" VerticalAlignment="Center"
-                                   HorizontalAlignment="Center" Margin="5"/>
-                        <ToggleSwitch 
+                                   HorizontalAlignment="Center" Margin="2"/>
+                        <ToggleSwitch   
                                             x:Name="ToggleFanSec1"
+                                            IsEnabled="False"
                                             HorizontalAlignment="Center"
                                             Width="75" Margin="5,15,5,5"/>
                   </StackPanel>

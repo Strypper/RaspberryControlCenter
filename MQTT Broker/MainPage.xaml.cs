@@ -176,6 +176,17 @@ namespace MQTT_Broker
 
 
 
+        private void RelayTest_Click(object sender, RoutedEventArgs e)
+        {
+            if (InitGPIO(StatusDigitalRelay) == true) ToggleRelaySec1.IsEnabled = true;
+            else
+            {
+                ToggleRelaySec1.IsEnabled = false;
+            }
+        }
+
+
+
         private async void InstructionClick(object sender, RoutedEventArgs e)
         {
             if(sender == FirstLightInstruc) 

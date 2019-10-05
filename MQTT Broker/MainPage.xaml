@@ -104,7 +104,7 @@ where the input or output will have one of those two values. For example, one wa
                                             HorizontalAlignment="Center"
                                             Width="100" Height="50"
                                             Windows10version1809:CornerRadius="5"
-                                            Content="Test"
+                                            Content="Test" Click="RelayTest_Click"
                                             FontWeight="ExtraBold"/>
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalRelay" VerticalAlignment="Center"

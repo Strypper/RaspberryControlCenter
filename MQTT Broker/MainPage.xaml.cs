@@ -1,13 +1,18 @@
-﻿using MQTTnet;
+﻿using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
+using MQTTnet;
 using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
@@ -19,6 +24,12 @@ namespace MQTT_Broker
 
     public class TempDemo
     {
+        public TempDemo(int temp, int time)
+        {
+            Temp = temp;
+            Time = time;
+        }
+
         public double Temp { get; set; }
         public int Time { get; set; }
     }
@@ -27,7 +38,9 @@ namespace MQTT_Broker
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        //fixed pin
+        private bool _isSwiped;
+        private Compositor compositor = Window.Current.Compositor;
+        private Visual backvisual;
         private const int LED_PIN = 17, RELAY_PIN = 27;
         private GpioPin LEDpin, RELAYpin;
         private GpioPinValue LEDpinValue, RELAYpinValue;
@@ -36,26 +49,41 @@ namespace MQTT_Broker
         BitmapImage LED = new BitmapImage(new Uri("ms-appx:///Assets/Diagrams/LEDDigital.png"));
         BitmapImage RELAY = new BitmapImage(new Uri("ms-appx:///Assets/Diagrams/RelayDigital.png"));
         Random rdm = new Random();
+        private ScalarKeyFrameAnimation rotate;
 
         public MainPage()
         {
             this.InitializeComponent();
-            MQTTBrokerInit();
-            List<TempDemo> demo = new List<TempDemo>()
-            {
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)},
-                new TempDemo(){ Temp = rdm.Next(), Time = rdm.Next(0, 24)}
-            };
-            (TempChart.Series[0] as LineSeries).ItemsSource = demo;
+            //MQTTBrokerInit();
+        }
+
+
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Load Chart Data
+            (TempChart.Series[0] as LineSeries).ItemsSource =
+                        from i in Enumerable.Range(0, 12)
+                        let temp = rdm.Next()
+                        let time = rdm.Next(0, 24)
+                        select new TempDemo(temp, time);
+            //Create animation
+            backvisual = ElementCompositionPreview.GetElementVisual(FanIcon);
+
+            backvisual.Size = new Vector2(100, 100);
+            backvisual.CenterPoint = new Vector3(backvisual.Size / 2, 0);
+
+            rotate = compositor.CreateScalarKeyFrameAnimation();
+
+            var linear = compositor.CreateLinearEasingFunction();
+
+            var startingValue = ExpressionValues.StartingValue.CreateScalarStartingValue();
+
+            rotate.InsertExpressionKeyFrame(0.0f, startingValue);
+            rotate.InsertExpressionKeyFrame(1.0f, startingValue + 360f, linear);
+            rotate.Duration = TimeSpan.FromMilliseconds(1000);
+            rotate.IterationBehavior = AnimationIterationBehavior.Forever;
+
         }
 
 
@@ -185,7 +213,22 @@ namespace MQTT_Broker
             }
         }
 
+        private void AddControl_Click(object sender, RoutedEventArgs e)
+        {
+            //Add Controls
+        }
 
+        private void ToggleFanSec1_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (ToggleFanSec1.IsOn == true)
+            {
+                backvisual.StartAnimation(nameof(Visual.RotationAngleInDegrees), rotate);
+            }
+            else if(ToggleFanSec1.IsOn == false)
+            {
+                backvisual.StopAnimation(nameof(Visual.RotationAngleInDegrees));
+            }
+        }
 
         private async void InstructionClick(object sender, RoutedEventArgs e)
         {
@@ -195,7 +238,7 @@ namespace MQTT_Broker
                 {
                     Title = "Light Digital Example"
                 };
-                diaglog.ShowAsync();
+                await diaglog.ShowAsync();
             }
             else if(sender == RelayInstruc) 
             {
@@ -203,8 +246,35 @@ namespace MQTT_Broker
                 {
                     Title = "Relay Digital Example"
                 };
-                diaglog.ShowAsync();
+                await diaglog.ShowAsync();
             }
+        }
+
+        private void SwipeableTextBlock_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (e.IsInertial && !_isSwiped)
+            {
+                var swipedDistance = e.Cumulative.Translation.Y;
+
+                if (Math.Abs(swipedDistance) <= 2) return;
+
+                if (swipedDistance > 0)
+                {
+                    TheToolBar.Translation = new Vector3(0, 100, 0);
+                    //SwipeableTextBlock.Text = "Down";
+                }
+                else
+                {
+                    TheToolBar.Translation = new Vector3(0, 0, 0);
+                    //SwipeableTextBlock.Text = "Up";
+                }
+                _isSwiped = true;
+            }
+        }
+
+        private void SwipeableTextBlock_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            _isSwiped = false;
         }
     }
 }

@@ -23,7 +23,8 @@
             <ToggleButton x:Name="MQTTToggle" Width="40" Height="40" 
                     Windows10version1809:CornerRadius="40" Margin="5"
                     Windows10version1809:ToolTipService.ToolTip="MQTT Toggle"
-                    Content="&#xE704;" FontFamily="Segoe MDL2 Assets"/>
+                    Content="&#xE704;" FontFamily="Segoe MDL2 Assets"
+                    Checked="MQTTToggle_Checked"/>
             <AppBarSeparator/>
             <Button x:Name="RaspberryGPIO" Margin="5"
                     Height="40" Content="Raspberry GPIO"

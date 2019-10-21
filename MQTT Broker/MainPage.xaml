@@ -328,7 +328,7 @@ is hook all the controls to the board and register it to this sofware."
                 <Windows10version1809:Border.TranslationTransition>
                     <Vector3Transition/>
                 </Windows10version1809:Border.TranslationTransition>
-                <UserControl:ToolBar>
+                <UserControl:ToolBar x:Name="ToolBar">
                 </UserControl:ToolBar>
             </Border>
         </Grid>

@@ -125,8 +125,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopUps\MQTT.xaml.cs">
-      <DependentUpon>MQTT.xaml</DependentUpon>
+    <Compile Include="PopUps\MQTTSettings.xaml.cs">
+      <DependentUpon>MQTTSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolBar\ToolBar.xaml.cs">
@@ -163,7 +163,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="PopUps\MQTT.xaml">
+    <Page Include="PopUps\MQTTSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

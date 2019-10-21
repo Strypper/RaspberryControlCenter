@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Composition;
@@ -25,6 +26,7 @@ namespace MQTT_Broker.ToolBar
         private Compositor compositor = Window.Current.Compositor;
         private Visual backVisual;
         private ScalarKeyFrameAnimation rotate;
+        public event RoutedEventHandler ToggleMQTT;
         public ToolBar()
         {
             this.InitializeComponent();
@@ -38,7 +40,7 @@ namespace MQTT_Broker.ToolBar
         private void Setting_PointerExited(object sender, PointerRoutedEventArgs e)
         {
 
-            backVisual.StopAnimation(nameof(Visual.RotationAngleInDegrees));
+            //backVisual.StopAnimation(nameof(Visual.RotationAngleInDegrees));
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -49,14 +51,22 @@ namespace MQTT_Broker.ToolBar
 
             rotate = compositor.CreateScalarKeyFrameAnimation();
 
-            var linear = compositor.CreateLinearEasingFunction();
+            //var linear = compositor.CreateLinearEasingFunction();
 
             var startingValue = ExpressionValues.StartingValue.CreateScalarStartingValue();
 
             rotate.InsertExpressionKeyFrame(0.0f, startingValue);
-            rotate.InsertExpressionKeyFrame(1.0f, startingValue + 360f, linear);
+            rotate.InsertExpressionKeyFrame(1.0f, startingValue + 360f);
             rotate.Duration = TimeSpan.FromMilliseconds(1000);
-            rotate.IterationBehavior = AnimationIterationBehavior.Forever;
+            //rotate.IterationBehavior = AnimationIterationBehavior.Forever;
+        }
+
+        protected async void MQTTToggle_Checked(object sender, RoutedEventArgs e)
+        {
+            if(ToggleMQTT != null)
+            {
+                this.ToggleMQTT(this, e);
+            }
         }
     }
 }

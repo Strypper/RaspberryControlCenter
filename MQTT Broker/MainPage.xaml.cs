@@ -1,10 +1,14 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
+using MQTT_Broker.PopUps;
 using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Client.Options;
 using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI;
@@ -38,27 +42,41 @@ namespace MQTT_Broker
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private bool _isSwiped;
         private Compositor compositor = Window.Current.Compositor;
         private Visual backvisual;
         private const int LED_PIN = 17, RELAY_PIN = 27;
         private GpioPin LEDpin, RELAYpin;
         private GpioPinValue LEDpinValue, RELAYpinValue;
         private string PayLoad;
-        private bool LightDigital, RelayDigital;
+        private bool  RelayDigital, IsConnected, _isSwiped, IsPublic;
         BitmapImage LED = new BitmapImage(new Uri("ms-appx:///Assets/Diagrams/LEDDigital.png"));
         BitmapImage RELAY = new BitmapImage(new Uri("ms-appx:///Assets/Diagrams/RelayDigital.png"));
         Random rdm = new Random();
         private ScalarKeyFrameAnimation rotate;
+        MqttApplicationMessage message;
+        MQTTSettings popup = new MQTTSettings();
 
+
+        IMqttServer mqttServer = new MqttFactory().CreateMqttServer();
         public MainPage()
         {
             this.InitializeComponent();
+            ToolBar.ToggleMQTT += new RoutedEventHandler(MqttToggled);
             //MQTTBrokerInit();
         }
 
+        private async void MqttToggled(object sender, RoutedEventArgs e)
+        {
+            popup.Sub += new RoutedEventHandler(MQTTSubcribe);
+            await popup.ShowAsync();
+            await MQTTBrokerInit();
+        }
 
-
+        private void MQTTSubcribe(object sender, RoutedEventArgs e) 
+        {
+            ToggleFirstLightSection1.IsEnabled = true;
+            Subcribe(popup.targetIP, popup.topic);
+        }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             //Load Chart Data
@@ -121,33 +139,28 @@ namespace MQTT_Broker
             var optionsBuilder = new MqttServerOptionsBuilder()
                 .WithConnectionBacklog(100)
                 .WithDefaultEndpointPort(1884);
-
-            var mqttServer = new MqttFactory().CreateMqttServer();
             try
             {
                 await mqttServer.StartAsync(optionsBuilder.Build());
                 System.Diagnostics.Debug.WriteLine("Success");
+                IsPublic = true;
             }
             catch (MQTTnet.Exceptions.MqttCommunicationException e)
             {
                 System.Diagnostics.Debug.WriteLine(e);
             }
-            await mqttServer.GetClientStatusAsync();
-            MqttApplicationMessage message;
-            await Task.Run(async () =>
-             {
-                 while (true)
-                 {
-                     message = new MqttApplicationMessageBuilder()
-                                .WithTopic("hello/world")
-                                .WithPayload("Hello")
-                                .WithExactlyOnceQoS()
-                                .WithRetainFlag(true)
-                                .Build();
-                         await mqttServer.PublishAsync(message);
-                     await Task.Delay(5000); // Every 10 seconds
-                 }
-             });
+        }
+
+        public async Task SendPayload(string topic, string payload)
+        {
+            message = new MqttApplicationMessageBuilder()
+              .WithTopic(topic)
+              .WithPayload(payload)
+              .WithExactlyOnceQoS()
+              .WithRetainFlag(true)
+              .Build();
+
+            await mqttServer.PublishAsync(message);
         }
 
         private void ToggleFirstLightSection1_Toggled(object sender, RoutedEventArgs e)
@@ -159,18 +172,22 @@ namespace MQTT_Broker
                     FirstLightBubSec1.Foreground = new SolidColorBrush(Colors.Yellow);
                     LEDpinValue = GpioPinValue.High;
                     LEDpin.Write(LEDpinValue);
-                    LightDigital = true;
-                    PayLoad = "Turn On Light";
-            }
+                            if (IsPublic == true)
+                            {
+                                SendPayload("Digital/Light", "On");
+                            }
+                }
                 else
                 {
                     Test.Background = new SolidColorBrush(Color.FromArgb(200, 250, 250, 250));
                     FirstLightBubSec1.Foreground = new SolidColorBrush(Colors.Black);
                     LEDpinValue = GpioPinValue.Low;
                     LEDpin.Write(LEDpinValue);
-                    LightDigital = false;
-                    PayLoad = "Turn Off Light";
-            }
+                            if (IsPublic == true)
+                            {
+                                SendPayload("Digital/Light", "Off");
+                            }
+                 }
         }
 
         private void ToggleRelaySec1_Toggled(object sender, RoutedEventArgs e)
@@ -261,12 +278,10 @@ namespace MQTT_Broker
                 if (swipedDistance > 0)
                 {
                     TheToolBar.Translation = new Vector3(0, 100, 0);
-                    //SwipeableTextBlock.Text = "Down";
                 }
                 else
                 {
                     TheToolBar.Translation = new Vector3(0, 0, 0);
-                    //SwipeableTextBlock.Text = "Up";
                 }
                 _isSwiped = true;
             }
@@ -275,6 +290,48 @@ namespace MQTT_Broker
         private void SwipeableTextBlock_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             _isSwiped = false;
+        }
+
+        private async Task<bool> Subcribe(string ipv4, string topic) 
+        {
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+            var options = new MqttClientOptionsBuilder()
+                                    .WithClientId("Raspberry pi 3 Control Center")
+                                    .WithTcpServer(ipv4, 1884)
+                                    .Build();
+            try
+            {
+                await mqttClient.ConnectAsync(options);
+            }
+            catch (MQTTnet.Exceptions.MqttCommunicationException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+            }
+            await mqttClient.SubscribeAsync
+                (new TopicFilterBuilder().WithTopic(topic).Build());
+            IsConnected = mqttClient.IsConnected;
+            mqttClient.UseApplicationMessageReceivedHandler(e =>
+            {
+                if(e.ApplicationMessage.Topic == "Light/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "On") 
+                {
+                    ToggleFirstLightSection1.IsOn = true;
+                } else if (e.ApplicationMessage.Topic == "Light/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "Off") 
+                {
+                    ToggleFirstLightSection1.IsOn = false;
+                } else if (e.ApplicationMessage.Topic == "Relay/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "On") 
+                {
+
+                } else if (e.ApplicationMessage.Topic == "Relay/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "Off") 
+                {
+
+                }
+                System.Diagnostics.Debug.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
+                System.Diagnostics.Debug.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");
+                System.Diagnostics.Debug.WriteLine($"+ Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}");
+
+            });
+            return false;
         }
     }
 }

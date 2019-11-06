@@ -5,3 +5,5 @@ This is an UWP app that will control simple IoT toys and feature such as:
 * FAN (Beta)
 * TEMPERATURE SENSOR (Beta)
 * MQTT Support
+# DEMO
+![](Demo/DashBoard.png)

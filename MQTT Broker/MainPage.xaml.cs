@@ -87,7 +87,7 @@ namespace MQTT_Broker
                         select new TempDemo(temp, time);
             //Create animation
             backvisual = ElementCompositionPreview.GetElementVisual(FanIcon);
-
+            ElementCompositionPreview.SetIsTranslationEnabled(FanIcon, true);
             backvisual.Size = new Vector2(100, 100);
             backvisual.CenterPoint = new Vector3(backvisual.Size / 2, 0);
 
@@ -114,14 +114,13 @@ namespace MQTT_Broker
             // Show an error if there is no GPIO controller
             if (gpio == null)
             {
-                LEDpin = null;
                 txt.Text = "There is no GPIO controller on this device.";
                 txt.Foreground = new SolidColorBrush(Colors.Red);
                 return false;
             }
 
-            StatusDigitalLed.Text = "GPIO controller initialized correctly.";
-            StatusDigitalLed.Foreground = new SolidColorBrush(Colors.Green);
+            txt.Text = "GPIO controller initialized correctly.";
+            txt.Foreground = new SolidColorBrush(Colors.Green);
 
             LEDpin = gpio.OpenPin(LED_PIN);
             RELAYpin = gpio.OpenPin(RELAY_PIN);

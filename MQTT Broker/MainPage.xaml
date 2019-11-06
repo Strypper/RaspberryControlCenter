@@ -8,14 +8,19 @@
     xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     xmlns:UserControl="using:MQTT_Broker.ToolBar"
+    xmlns:m="using:MQTT_Broker.Models"
+    xmlns:vm="using:MQTT_Broker.ViewModel"
     mc:Ignorable="d">
     <Page.Resources>
+        <m:DigitalControl x:Key="DControl"/>
+        <vm:ViewModelBase x:Key="viewmodel"/>
         <LinearGradientBrush x:Key="DefaultColor" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#a8ff78" Offset="0.0" />
             <GradientStop Color="#78ffd6" Offset="0.7" />
         </LinearGradientBrush>
     </Page.Resources>
-    <Grid Background="{StaticResource DefaultColor}">
+    <Grid Background="{StaticResource DefaultColor}" 
+          DataContext="{Binding Source={StaticResource DControl}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -66,12 +71,16 @@ where the input or output will have one of those two values. For example, one wa
                                             HorizontalAlignment="Center"
                                             Width="100" Height="50"
                                             Windows10version1809:CornerRadius="5"
-                                            Content="Test" Click="FirstLightTest_Click"
-                                            FontWeight="ExtraBold"/>
+                                            Content="Test" 
+                                            Command="{Binding InitGpiocommand, 
+                                            Source={StaticResource viewmodel}}"
+                                            FontWeight="ExtraBold">
+                            </Button>
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalLed" VerticalAlignment="Center"
                                    HorizontalAlignment="Center" Margin="2" FontSize="11"
-                                   FontWeight="Bold" Width="220" TextWrapping="Wrap"/>
+                                   FontWeight="Bold" Width="220" TextWrapping="Wrap"
+                                   Text="{Binding Status, Mode=TwoWay}"/>
                         <ToggleSwitch 
                                             x:Name="ToggleFirstLightSection1"
                                             IsEnabled="False"
@@ -121,7 +130,7 @@ where the input or output will have one of those two values. For example, one wa
                <Border x:Name="Fan" Width="230" Height="290"
                                     Margin="15" CornerRadius="15" Background="#fafafa">
                   <StackPanel>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE713;"
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA38;"
                                               x:Name="FanIcon" VerticalAlignment="Center"
                                               HorizontalAlignment="Center" Margin="0,25,0,25"
                                               FontSize="100" Width="100" Height="100">

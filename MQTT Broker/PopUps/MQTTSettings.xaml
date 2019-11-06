@@ -24,6 +24,8 @@
                         </Border>
                         <TextBlock Text="CONNECT YOUR RASPBERRY AND OTHER DEVICES TO THE SAME NETWORK" Margin="5"
                    FontWeight="Bold" Width="400" TextWrapping="Wrap" TextAlignment="Center"/>
+                        <TextBlock x:Name="IpV4" FontWeight="Bold"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </ScrollViewer>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"

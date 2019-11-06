@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Networking;
+using Windows.Networking.Connectivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,6 +34,7 @@ namespace MQTT_Broker.PopUps
         public MQTTSettings()
         {
             this.InitializeComponent();
+            IpV4.Text = GetLocalIp();
         }
 
         private void Hide_Click(object sender, RoutedEventArgs e)
@@ -45,6 +48,22 @@ namespace MQTT_Broker.PopUps
             {
                 this.Sub(this, e);
             }
+        }
+        public string GetLocalIp(HostNameType hostNameType = HostNameType.Ipv4)
+        {
+            var icp = NetworkInformation.GetInternetConnectionProfile();
+
+            if (icp?.NetworkAdapter == null) return null;
+            var hostname =
+                NetworkInformation.GetHostNames()
+                    .FirstOrDefault(
+                        hn =>
+                            hn.Type == hostNameType &&
+                            hn.IPInformation?.NetworkAdapter != null &&
+                            hn.IPInformation.NetworkAdapter.NetworkAdapterId == icp.NetworkAdapter.NetworkAdapterId);
+
+            // the ip address
+            return hostname?.CanonicalName;
         }
     }
 }

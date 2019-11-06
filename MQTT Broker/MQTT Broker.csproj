@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DigitalControl.cs" />
     <Compile Include="PopUps\InstructionDiaglog.xaml.cs">
       <DependentUpon>InstructionDiaglog.xaml</DependentUpon>
     </Compile>
@@ -132,6 +133,8 @@
     <Compile Include="ToolBar\ToolBar.xaml.cs">
       <DependentUpon>ToolBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\Commands\InitGpioCommand.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -201,6 +204,7 @@
   <ItemGroup>
     <Content Include="Assets\Lottie\LookingForWifi.json" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

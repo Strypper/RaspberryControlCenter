@@ -7,3 +7,5 @@ This is an UWP app that will control simple IoT toys and feature such as:
 * MQTT Support
 # DEMO
 ![](Demo/DashBoard.png)
+![](Demo/ToolBar.png)
+![](Demo/MQTT.gif)

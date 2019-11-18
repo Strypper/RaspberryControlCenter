@@ -71,11 +71,16 @@ where the input or output will have one of those two values. For example, one wa
                                             HorizontalAlignment="Center"
                                             Width="100" Height="50"
                                             Windows10version1809:CornerRadius="5"
-                                            Content="Test" 
-                                            Command="{Binding InitGpiocommand, 
-                                            Source={StaticResource viewmodel}}"
+                                            Content="Test" IsEnabled="True"
+                                    Click="FirstLightTest_Click"
                                             FontWeight="ExtraBold">
                             </Button>
+
+
+
+
+                            <!--Command="{Binding InitGpiocommand, 
+                                            Source={StaticResource viewmodel}}"-->
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalLed" VerticalAlignment="Center"
                                    HorizontalAlignment="Center" Margin="2" FontSize="11"

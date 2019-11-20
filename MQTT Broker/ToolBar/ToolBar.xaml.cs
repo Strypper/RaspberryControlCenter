@@ -1,12 +1,15 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
+using MQTT_Broker.PopUps;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -67,6 +70,25 @@ namespace MQTT_Broker.ToolBar
             {
                 this.ToggleMQTT(this, e);
             }
+        }
+
+        private void EButton_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+        }
+
+        private void EButton_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            CoreApplication.Exit();
+        }
+
+        private async void RaspberryGPIO_Click(object sender, RoutedEventArgs e)
+        {
+            RaspberryPiMap m = new RaspberryPiMap();
+            await m.ShowAsync();
         }
     }
 }

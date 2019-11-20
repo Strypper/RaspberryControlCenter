@@ -101,37 +101,43 @@ namespace MQTT_Broker
             rotate.InsertExpressionKeyFrame(1.0f, startingValue + 360f, linear);
             rotate.Duration = TimeSpan.FromMilliseconds(1000);
             rotate.IterationBehavior = AnimationIterationBehavior.Forever;
+            backvisual.StartAnimation(nameof(Visual.RotationAngleInDegrees), rotate);
 
         }
 
 
 
 
-        private bool InitGPIO(TextBlock txt)
-        {
-            var gpio = GpioController.GetDefault();
+        //private bool InitGPIO(TextBlock txt)
+        //{
+        //    var gpio = GpioController.GetDefault();
 
-            // Show an error if there is no GPIO controller
-            if (gpio == null)
-            {
-                txt.Text = "There is no GPIO controller on this device.";
-                txt.Foreground = new SolidColorBrush(Colors.Red);
-                return false;
-            }
+        //    // Show an error if there is no GPIO controller
+        //    if (gpio == null)
+        //    {
+        //        txt.Text = "There is no GPIO controller on this device.";
+        //        txt.Foreground = new SolidColorBrush(Colors.Red);
+        //        return false;
+        //    }
 
-            txt.Text = "GPIO controller initialized correctly.";
-            txt.Foreground = new SolidColorBrush(Colors.Green);
+        //    txt.Text = "GPIO controller initialized correctly.";
+        //    txt.Foreground = new SolidColorBrush(Colors.Green);
 
-            LEDpin = gpio.OpenPin(LED_PIN);
-            RELAYpin = gpio.OpenPin(RELAY_PIN);
-            LEDpinValue = GpioPinValue.Low;
-            RELAYpinValue = GpioPinValue.High;
-            LEDpin.Write(LEDpinValue);
-            RELAYpin.Write(RELAYpinValue);
-            LEDpin.SetDriveMode(GpioPinDriveMode.Output);
-            RELAYpin.SetDriveMode(GpioPinDriveMode.Output);
-            return true;
-        }
+        //    if(txt == StatusDigitalRelay)
+        //    {
+        //        RELAYpin = gpio.OpenPin(RELAY_PIN);
+        //        RELAYpinValue = GpioPinValue.High;
+        //        RELAYpin.Write(RELAYpinValue);
+        //        RELAYpin.SetDriveMode(GpioPinDriveMode.Output);
+        //        return true;
+        //    }
+
+        //    LEDpin = gpio.OpenPin(LED_PIN);
+        //    LEDpinValue = GpioPinValue.Low;
+        //    LEDpin.Write(LEDpinValue);
+        //    LEDpin.SetDriveMode(GpioPinDriveMode.Output);
+        //    return true;
+        //}
 
         public async Task MQTTBrokerInit()
         {
@@ -210,10 +216,28 @@ namespace MQTT_Broker
 
         private void FirstLightTest_Click(object sender, RoutedEventArgs e)
         {
-            if (InitGPIO(StatusDigitalLed) == true) ToggleFirstLightSection1.IsEnabled = true;
+            var gpio = GpioController.GetDefault();
+
+            // Show an error if there is no GPIO controller
+            if (gpio == null)
+            {
+                LEDpin = null;
+                StatusDigitalLed.Text = "There is no GPIO controller on this device.";
+                StatusDigitalLed.Foreground = new SolidColorBrush(Colors.Red);
+                ToggleFirstLightSection1.IsEnabled = false;
+                return;
+            }
             else
             {
-                ToggleFirstLightSection1.IsEnabled = false;
+                LEDpin = gpio.OpenPin(LED_PIN);
+                LEDpinValue = GpioPinValue.Low;
+                LEDpin.Write(LEDpinValue);
+                LEDpin.SetDriveMode(GpioPinDriveMode.Output);
+                ToggleFirstLightSection1.IsEnabled = true;
+
+
+                StatusDigitalLed.Text = "GPIO controller initialized correctly.";
+                StatusDigitalLed.Foreground = new SolidColorBrush(Colors.Green);
             }
 
         }
@@ -222,11 +246,29 @@ namespace MQTT_Broker
 
         private void RelayTest_Click(object sender, RoutedEventArgs e)
         {
-            if (InitGPIO(StatusDigitalRelay) == true) ToggleRelaySec1.IsEnabled = true;
-            else
+            var gpio = GpioController.GetDefault();
+
+            // Show an error if there is no GPIO controller
+            if (gpio == null)
             {
+                RELAYpin = null;
+                StatusDigitalRelay.Text = "There is no GPIO controller on this device.";
+                StatusDigitalRelay.Foreground = new SolidColorBrush(Colors.Red);
                 ToggleRelaySec1.IsEnabled = false;
+                return;
+            } else
+            {
+                RELAYpin = gpio.OpenPin(RELAY_PIN);
+                RELAYpinValue = GpioPinValue.High;
+                RELAYpin.Write(RELAYpinValue);
+                RELAYpin.SetDriveMode(GpioPinDriveMode.Output);
+                ToggleRelaySec1.IsEnabled = true;
+
+
+                StatusDigitalRelay.Text = "GPIO controller initialized correctly.";
+                StatusDigitalRelay.Foreground = new SolidColorBrush(Colors.Green);
             }
+
         }
 
         private void AddControl_Click(object sender, RoutedEventArgs e)
@@ -234,17 +276,7 @@ namespace MQTT_Broker
             //Add Controls
         }
 
-        private void ToggleFanSec1_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (ToggleFanSec1.IsOn == true)
-            {
-                backvisual.StartAnimation(nameof(Visual.RotationAngleInDegrees), rotate);
-            }
-            else if(ToggleFanSec1.IsOn == false)
-            {
-                backvisual.StopAnimation(nameof(Visual.RotationAngleInDegrees));
-            }
-        }
+
 
         private async void InstructionClick(object sender, RoutedEventArgs e)
         {

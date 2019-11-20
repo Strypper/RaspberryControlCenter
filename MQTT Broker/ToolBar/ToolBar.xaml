@@ -10,7 +10,7 @@
     d:DesignHeight="150"
     d:DesignWidth="600">
 
-    <Border Width="475" Height="50" CornerRadius="5">
+    <Border Width="525" Height="50" CornerRadius="5">
         <Border.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Color="#c0c0aa" Offset="0.0" />
@@ -30,7 +30,8 @@
                     Height="40" Content="Raspberry GPIO"
                     Windows10version1809:CornerRadius="5"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+                    VerticalAlignment="Center"
+                    Click="RaspberryGPIO_Click"/>
             <Button x:Name="MQTTTheory" Margin="5"
                     Height="40" Content="MQTT Theory"
                     Windows10version1809:CornerRadius="5"
@@ -53,6 +54,14 @@
                     Windows10version1809:ToolTipService.ToolTip="Setting"
                     Windows10version1809:CornerRadius="40"
                     Content="&#xE115;" FontFamily="Segoe MDL2 Assets"/>
+            <Button x:Name="Exit" Margin="5"
+                    Width="40" Height="40"
+                    PointerEntered="EButton_PointerEntered"
+                    PointerExited="EButton_PointerExited" Content="&#xE7E8;"
+                    FontFamily="Segoe MDL2 Assets" Click="Exit_Click"
+                    Background="OrangeRed" Windows10version1809:CornerRadius="40"
+                    Windows10version1809:ToolTipService.ToolTip="Exit Application">
+            </Button>
         </StackPanel>
     </Border>
 </UserControl>

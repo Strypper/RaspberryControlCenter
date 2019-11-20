@@ -151,24 +151,10 @@ where the input or output will have one of those two values. For example, one wa
                                             Windows10version1809:CornerRadius="5"
                                             Content="Instruction"
                                             FontWeight="ExtraBold"/>
-
-                            <Button x:Name="FanTest" Margin="5"
-                                            VerticalAlignment="Center" 
-                                            HorizontalAlignment="Center"
-                                            Width="100" Height="50"
-                                            Windows10version1809:CornerRadius="5"
-                                            Content="Test"
-                                            FontWeight="ExtraBold"/>
                         </StackPanel>
                         <TextBlock x:Name="StatusDigitalFan" VerticalAlignment="Center"
                                    HorizontalAlignment="Center" Margin="2"/>
-                        <ToggleSwitch   
-                                            x:Name="ToggleFanSec1"
-                                            IsEnabled="True"
-                                            HorizontalAlignment="Center"
-                                            Width="75" Margin="5,15,5,5"
-                                            Toggled="ToggleFanSec1_Toggled"/>
-                  </StackPanel>
+                    </StackPanel>
                </Border>
                         </StackPanel>
             

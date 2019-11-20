@@ -14,9 +14,8 @@
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <Image x:Name="ArduinoSketch" Width="400" Height="300" Stretch="UniformToFill"
                 VerticalAlignment="Top" HorizontalAlignment="Center"/>
-        <TextBlock x:Name="Instruction" Margin="5" Height="100" TextWrapping="WrapWholeWords"
-                   Text="leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-Why do we use it?Lorem Ipsum as their eir infancy. Various versions have evolved over the years"/>
+        <TextBlock x:Name="Instruction" Margin="5"  TextWrapping="WrapWholeWords"
+                   Text="Follow the diagram and plug it correctly. Once you done press TEST first before turn on the switch"/>
         <TextBlock Margin="5" Foreground="Orange">
                 <Run Text="Components: "/>
                 <Run x:Name="ComponentsUI" Text=""/>

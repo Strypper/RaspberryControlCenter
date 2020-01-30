@@ -1,6 +1,7 @@
 ﻿using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
+using MQTTnet.Server;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,6 +65,23 @@ namespace MQTT_Broker.PopUps
 
             // the ip address
             return hostname?.CanonicalName;
+        }
+
+        private async void Find_Click(object sender, RoutedEventArgs e)
+        {
+            //var optionsBuilder = new MqttServerOptionsBuilder()
+            //                        .WithConnectionBacklog(100)
+            //                        .WithDefaultEndpointPort(1884);
+            //try
+            //{
+            //    await mqttServer.StartAsync(optionsBuilder.Build());
+            //    System.Diagnostics.Debug.WriteLine("Success");
+            //    IsPublic = true;
+            //}
+            //catch (MQTTnet.Exceptions.MqttCommunicationException e)
+            //{
+            //    System.Diagnostics.Debug.WriteLine(e);
+            //}
         }
     }
 }

@@ -62,7 +62,7 @@ namespace MQTT_Broker
         {
             this.InitializeComponent();
             ToolBar.ToggleMQTT += new RoutedEventHandler(MqttToggled);
-            //MQTTBrokerInit();
+            MQTTBrokerInit();
         }
 
         private async void MqttToggled(object sender, RoutedEventArgs e)
@@ -105,40 +105,6 @@ namespace MQTT_Broker
 
         }
 
-
-
-
-        //private bool InitGPIO(TextBlock txt)
-        //{
-        //    var gpio = GpioController.GetDefault();
-
-        //    // Show an error if there is no GPIO controller
-        //    if (gpio == null)
-        //    {
-        //        txt.Text = "There is no GPIO controller on this device.";
-        //        txt.Foreground = new SolidColorBrush(Colors.Red);
-        //        return false;
-        //    }
-
-        //    txt.Text = "GPIO controller initialized correctly.";
-        //    txt.Foreground = new SolidColorBrush(Colors.Green);
-
-        //    if(txt == StatusDigitalRelay)
-        //    {
-        //        RELAYpin = gpio.OpenPin(RELAY_PIN);
-        //        RELAYpinValue = GpioPinValue.High;
-        //        RELAYpin.Write(RELAYpinValue);
-        //        RELAYpin.SetDriveMode(GpioPinDriveMode.Output);
-        //        return true;
-        //    }
-
-        //    LEDpin = gpio.OpenPin(LED_PIN);
-        //    LEDpinValue = GpioPinValue.Low;
-        //    LEDpin.Write(LEDpinValue);
-        //    LEDpin.SetDriveMode(GpioPinDriveMode.Output);
-        //    return true;
-        //}
-
         public async Task MQTTBrokerInit()
         {
             var optionsBuilder = new MqttServerOptionsBuilder()
@@ -149,6 +115,23 @@ namespace MQTT_Broker
                 await mqttServer.StartAsync(optionsBuilder.Build());
                 System.Diagnostics.Debug.WriteLine("Success");
                 IsPublic = true;
+
+
+                MqttApplicationMessage message;
+                await Task.Run(async () =>
+                {
+                    while (true)
+                    {
+                        message = new MqttApplicationMessageBuilder()
+                                .WithTopic("Server/Hello")
+                                .WithPayload(DateTime.Now.ToString())
+                                .WithExactlyOnceQoS()
+                                .WithRetainFlag(true)
+                                .Build();
+                        await mqttServer.PublishAsync(message);
+                        await Task.Delay(1000); // Every 1 seconds
+                    }
+                });
             }
             catch (MQTTnet.Exceptions.MqttCommunicationException e)
             {
@@ -177,10 +160,14 @@ namespace MQTT_Broker
                     FirstLightBubSec1.Foreground = new SolidColorBrush(Colors.Yellow);
                     LEDpinValue = GpioPinValue.High;
                     LEDpin.Write(LEDpinValue);
-                            if (IsPublic == true)
-                            {
-                                SendPayload("Digital/Light", "On");
-                            }
+                MqttApplicationMessage message;
+                message = new MqttApplicationMessageBuilder()
+                                .WithTopic("Server/Hello")
+                                .WithPayload("Light Section 1 Turn On")
+                                .WithExactlyOnceQoS()
+                                .WithRetainFlag(true)
+                                .Build();
+                mqttServer.PublishAsync(message);
                 }
                 else
                 {
@@ -188,11 +175,14 @@ namespace MQTT_Broker
                     FirstLightBubSec1.Foreground = new SolidColorBrush(Colors.Black);
                     LEDpinValue = GpioPinValue.Low;
                     LEDpin.Write(LEDpinValue);
-                            if (IsPublic == true)
-                            {
-                                SendPayload("Digital/Light", "Off");
-                            }
-                 }
+                message = new MqttApplicationMessageBuilder()
+                                .WithTopic("Server/Hello")
+                                .WithPayload("Light Section 1 Turn Off")
+                                .WithExactlyOnceQoS()
+                                .WithRetainFlag(true)
+                                .Build();
+                mqttServer.PublishAsync(message);
+            }
         }
 
         private void ToggleRelaySec1_Toggled(object sender, RoutedEventArgs e)
@@ -325,37 +315,22 @@ namespace MQTT_Broker
 
         private async Task<bool> Subcribe(string ipv4, string topic) 
         {
-            var factory = new MqttFactory();
-            var mqttClient = factory.CreateMqttClient();
-            var options = new MqttClientOptionsBuilder()
-                                    .WithClientId("Raspberry pi 3 Control Center")
-                                    .WithTcpServer(ipv4, 1884)
-                                    .Build();
             try
             {
-                await mqttClient.ConnectAsync(options);
+                await mqttServer.SubscribeAsync(ipv4, topic);
             }
             catch (MQTTnet.Exceptions.MqttCommunicationException e)
             {
                 System.Diagnostics.Debug.WriteLine(e);
             }
-            await mqttClient.SubscribeAsync
-                (new TopicFilterBuilder().WithTopic(topic).Build());
-            IsConnected = mqttClient.IsConnected;
-            mqttClient.UseApplicationMessageReceivedHandler(e =>
+            mqttServer.UseApplicationMessageReceivedHandler(e =>
             {
-                if(e.ApplicationMessage.Topic == "Light/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "On") 
+                if(e.ApplicationMessage.Topic == "Server/Hello" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "LED turned On") 
                 {
                     ToggleFirstLightSection1.IsOn = true;
-                } else if (e.ApplicationMessage.Topic == "Light/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "Off") 
+                } else if (e.ApplicationMessage.Topic == "Server/Hello" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "LED turned Off") 
                 {
                     ToggleFirstLightSection1.IsOn = false;
-                } else if (e.ApplicationMessage.Topic == "Relay/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "On") 
-                {
-
-                } else if (e.ApplicationMessage.Topic == "Relay/Digital" && Encoding.UTF8.GetString(e.ApplicationMessage.Payload) == "Off") 
-                {
-
                 }
                 System.Diagnostics.Debug.WriteLine("### RECEIVED APPLICATION MESSAGE ###");
                 System.Diagnostics.Debug.WriteLine($"+ Topic = {e.ApplicationMessage.Topic}");

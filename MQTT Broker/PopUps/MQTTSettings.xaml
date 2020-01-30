@@ -6,9 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:lottie="using:Microsoft.Toolkit.Uwp.UI.Lottie"
+    xmlns:lottie="using:Microsoft.Toolkit.Uwp.UI.Lottie" xmlns:vm="using:MQTT_Broker.ViewModel" xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d" x:Name="MQTTDialog"
     Title="Config MQTT">
+
+    <ContentDialog.Resources>
+        <vm:ViewModelBase x:Key="viewModel"/>
+    </ContentDialog.Resources>
 
     <Pivot>
         <PivotItem Header="Broker Mode">
@@ -31,9 +35,10 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
                             HorizontalAlignment="Center">
                     <Button x:Name="Hide" Margin="5" Content="Got It" 
-                    Width="220" Height="50" Click="Hide_Click" CornerRadius="5"/>
+                            Width="220" Height="50" Click="Hide_Click" Windows10version1809:CornerRadius="5"/>
                     <Button x:Name="Find" Margin="5" Content="Public" 
-                    Width="220" Height="50" CornerRadius="5"/>
+                            Width="220" Height="50" CornerRadius="5" Click="Find_Click"
+                            Command="{Binding Path = InitGPIO, Source={StaticResource viewModel}}"/>
                 </StackPanel>
             </StackPanel>
         </PivotItem>

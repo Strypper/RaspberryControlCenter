@@ -88,7 +88,7 @@ where the input or output will have one of those two values. For example, one wa
                                    Text="{Binding Status, Mode=TwoWay}"/>
                         <ToggleSwitch 
                                             x:Name="ToggleFirstLightSection1"
-                                            IsEnabled="False"
+                                            IsEnabled="True"
                                             HorizontalAlignment="Center"
                                             Width="75" Margin="5,15,5,5"
                                             Toggled="ToggleFirstLightSection1_Toggled"/>
